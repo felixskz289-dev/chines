@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSKK 中级 — Трекер подготовки на 30 дней</title>
+<style>
+  :root{
+    --bg:#0e1116; --bg2:#141a22; --card:#1a212b; --line:#2a3442;
+    --ink:#e8e6e1; --dim:#9aa4b0; --accent:#e2553d; --accent2:#d9a441;
+    --cn:#6fbf8f; --pinyin:#7aa2d8; --white:#f5f4f0;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .han{font-family:"Microsoft YaHei","PingFang SC","Noto Sans SC",sans-serif}
+  /* ---------- HERO ---------- */
+  header{
+    min-height:78vh; display:flex; flex-direction:column; justify-content:center;
+    align-items:center; text-align:center; padding:60px 24px 80px;
+    background:
+      radial-gradient(ellipse 60% 45% at 75% 15%, rgba(226,85,61,.14), transparent 60%),
+      radial-gradient(ellipse 55% 50% at 15% 85%, rgba(217,164,65,.10), transparent 60%),
+      var(--bg);
+    position:relative; overflow:hidden;
+  }
+  header::before{
+    content:"说"; position:absolute; font-size:42rem; line-height:1;
+    right:-8rem; top:-6rem; color:rgba(255,255,255,.025);
+    font-family:"Noto Sans SC","Microsoft YaHei",sans-serif; user-select:none;
+  }
+  .tag{
+    display:inline-block; font-size:.78rem; letter-spacing:.35em; text-transform:uppercase;
+    color:var(--accent2); border:1px solid rgba(217,164,65,.4); padding:8px 22px;
+    border-radius:99px; margin-bottom:28px; backdrop-filter:blur(4px);
+  }
+  h1{font-size:clamp(2.4rem,6vw,4.6rem); font-weight:800; line-height:1.1; letter-spacing:-.01em}
+  h1 .han{color:var(--accent)}
+  .sub{max-width:640px; color:var(--dim); margin-top:22px; font-size:1.06rem}
+  .stats{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; margin-top:44px}
+  .stat{
+    background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:16px;
+    padding:18px 26px; min-width:150px;
+  }
+  .stat b{display:block; font-size:1.7rem; color:var(--accent2)}
+  .stat span{font-size:.82rem; color:var(--dim)}
+  .scroll{position:absolute; bottom:26px; color:var(--dim); font-size:.75rem; letter-spacing:.3em; animation:bob 2.2s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(8px)}}
+  /* ---------- NAV ---------- */
+  nav{
+    position:sticky; top:0; z-index:50; display:flex; justify-content:center; gap:6px;
+    background:rgba(14,17,22,.85); backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line); padding:12px 10px; flex-wrap:wrap;
+  }
+  nav a{
+    color:var(--dim); text-decoration:none; font-size:.86rem; padding:8px 16px;
+    border-radius:99px; transition:.25s;
+  }
+  nav a:hover{color:var(--ink); background:rgba(255,255,255,.06)}
+  nav a.hot{color:var(--accent)}
+  /* ---------- SECTIONS ---------- */
+  section{max-width:1060px; margin:0 auto; padding:90px 24px 30px}
+  .kicker{font-size:.75rem; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-bottom:10px}
+  h2{font-size:clamp(1.7rem,4vw,2.5rem); margin-bottom:14px; letter-spacing:-.01em}
+  .lead{color:var(--dim); max-width:720px; margin-bottom:36px}
+  /* exam cards */
+  .grid{display:grid; gap:18px}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:18px; padding:26px;
+    transition:transform .3s, border-color .3s;
+  }
+  .card:hover{transform:translateY(-4px); border-color:var(--accent)}
+  .card .num{font-size:2rem; font-weight:800; color:var(--accent); opacity:.9}
+  .card h3{margin:8px 0 6px; font-size:1.12rem}
+  .card p{color:var(--dim); font-size:.92rem}
+  .card .time{display:inline-block; margin-top:12px; font-size:.78rem; color:var(--accent2); border:1px solid rgba(217,164,65,.35); padding:4px 12px; border-radius:99px}
+  .note{
+    margin-top:22px; padding:20px 24px; border-left:3px solid var(--accent);
+    background:rgba(226,85,61,.07); border-radius:0 14px 14px 0; color:var(--ink); font-size:.94rem;
+  }
+  /* weeks */
+  .week{margin-top:70px}
+  .week-head{
+    display:flex; align-items:center; gap:18px; margin-bottom:24px; flex-wrap:wrap;
+  }
+  .week-badge{
+    font-weight:800; font-size:1.05rem; color:#fff; padding:10px 22px; border-radius:14px;
+    background:linear-gradient(135deg,var(--accent),#a83a28); box-shadow:0 8px 24px rgba(226,85,61,.3);
+  }
+  .week-head h3{font-size:1.4rem}
+  .week-head .focus{color:var(--accent2); font-size:.92rem}
+  .days{display:grid; gap:10px}
+  .day{
+    display:grid; grid-template-columns:64px 1fr; gap:16px; align-items:start;
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 20px;
+    transition:border-color .25s;
+  }
+  .day:hover{border-color:var(--accent2)}
+  .day .d{
+    font-weight:800; color:var(--accent); font-size:.95rem; text-align:center;
+    background:rgba(226,85,61,.1); border-radius:10px; padding:8px 4px;
+  }
+  .day p{font-size:.92rem; color:var(--ink)}
+  .day p b{color:var(--accent2)}
+  /* phrase cards */
+  .phrase{
+    background:var(--card); border:1px solid var(--line); border-radius:16px; padding:20px 24px;
+    transition:border-color .25s, transform .25s;
+  }
+  .phrase:hover{border-color:var(--cn); transform:translateY(-3px)}
+  .phrase .cn{font-size:1.28rem; color:var(--cn); font-weight:600}
+  .phrase .py{color:var(--pinyin); font-size:.9rem; margin-top:3px}
+  .phrase .ru{color:var(--dim); font-size:.9rem; margin-top:6px}
+  .theme-title{
+    margin:40px 0 16px; display:flex; align-items:center; gap:14px; font-size:1.15rem; font-weight:700;
+  }
+  .theme-title::after{content:""; flex:1; height:1px; background:var(--line)}
+  .theme-title .dot{width:10px; height:10px; border-radius:50%; background:var(--accent2)}
+  .tpl{
+    background:linear-gradient(135deg,rgba(111,191,143,.06),transparent);
+    border:1px solid rgba(111,191,143,.25); border-radius:16px; padding:22px 26px; margin-bottom:14px;
+  }
+  .tpl h4{color:var(--cn); margin-bottom:10px; font-size:1rem}
+  .tpl ul{list-style:none}
+  .tpl li{
+    padding:9px 0; border-bottom:1px dashed rgba(255,255,255,.08); font-size:.93rem;
+    display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:baseline;
+  }
+  .tpl li:last-child{border-bottom:none}
+  .tpl .cn2{font-family:"Microsoft YaHei","Noto Sans SC",sans-serif; color:var(--cn); font-weight:600; white-space:nowrap}
+  .tpl .meta{color:var(--dim); font-size:.85rem}
+  .tpl .meta i{color:var(--pinyin); font-style:normal}
+  /* connectors table */
+  table{width:100%; border-collapse:collapse; background:var(--card); border-radius:16px; overflow:hidden; border:1px solid var(--line)}
+  th{background:rgba(217,164,65,.1); color:var(--accent2); text-align:left; padding:14px 18px; font-size:.85rem; letter-spacing:.05em; text-transform:uppercase}
+  td{padding:13px 18px; border-top:1px solid var(--line); font-size:.93rem; vertical-align:top}
+  tr:hover td{background:rgba(255,255,255,.02)}
+  td .han{color:var(--cn); font-weight:600; font-size:1.05rem}
+  td i{color:var(--pinyin); font-style:normal; font-size:.85rem; display:block}
+  /* checklist */
+  .check-list{display:grid; gap:12px; margin-top:8px}
+  .chk{
+    display:flex; gap:16px; align-items:flex-start; background:var(--card);
+    border:1px solid var(--line); border-radius:14px; padding:18px 22px; cursor:pointer; transition:.25s;
+  }
+  .chk:hover{border-color:var(--accent2)}
+  .chk .box{
+    flex:none; width:24px; height:24px; border:2px solid var(--dim); border-radius:7px; margin-top:2px;
+    display:grid; place-items:center; transition:.2s; font-size:.85rem; color:transparent;
+  }
+  .chk.done .box{background:var(--accent); border-color:var(--accent); color:#fff}
+  .chk.done p{color:var(--dim); text-decoration:line-through}
+  .chk p{font-size:.94rem}
+  .chk p b{color:var(--accent2)}
+  .chk small{color:var(--dim); display:block; margin-top:2px}
+  footer{
+    text-align:center; padding:70px 24px 50px; color:var(--dim); font-size:.85rem;
+    border-top:1px solid var(--line); margin-top:90px;
+  }
+  footer .han{font-size:1.6rem; color:var(--accent); display:block; margin-bottom:12px}
+  @media(max-width:600px){
+    .day{grid-template-columns:1fr}
+    .day .d{width:64px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="tag">30-дневный трекер подготовки</div>
+  <h1>HSKK <span class="han">中级</span><br>Говори уверенно за 30 дней</h1>
+  <p class="sub">Твоя точка А — HSK 4 (234 балла) и HSKK 53 балла. Точка Б — <b style="color:var(--accent2)">65+ баллов</b>. Внутри: структура экзамена, план по дням, база речевых клише и чек-лист самопроверки.</p>
+  <div class="stats">
+    <div class="stat"><b>30</b><span>дней практики</span></div>
+    <div class="stat"><b>53 → 65+</b><span>цель по баллам</span></div>
+    <div class="stat"><b>~21 мин</b><span>длительность экзамена</span></div>
+    <div class="stat"><b>3</b><span>части экзамена</span></div>
+  </div>
+  <div class="scroll">ЛИСТАЙ ВНИЗ ▾</div>
+</header>
+
+<nav>
+  <a href="#exam">Структура экзамена</a>
+  <a href="#week1">Неделя 1</a>
+  <a href="#week2">Неделя 2</a>
+  <a href="#week3">Неделя 3</a>
+  <a href="#week4">Неделя 4</a>
+  <a href="#phrases" class="hot">★ Клише и шаблоны</a>
+  <a href="#check">Чек-лист</a>
+</nav>
+
+<!-- ============ 1. ЭКЗАМЕН ============ -->
+<section id="exam">
+  <div class="kicker">Блок 0 · Знай свой экзамен</div>
+  <h2>Структура HSKK (средний уровень)</h2>
+  <p class="lead">HSKK 中级 проверяет только устную речь. Весь экзамен проходит с наушниками и микрофоном: слушаешь задание → говоришь в микрофон. Всего около 21 минуты, три части.</p>
+  <div class="grid g3">
+    <div class="card">
+      <div class="num han">听后重复</div>
+      <h3>Часть 1 · Повторение</h3>
+      <p>Слышишь 10 фраз/коротких предложений — повторяешь вслух каждое. Проверяются точное восприятие, тоны и произношение.</p>
+      <span class="time">~10 предложений · ок. 4 мин</span>
+    </div>
+    <div class="card">
+      <div class="num han">听后回答</div>
+      <h3>Часть 2 · Ответы на вопросы</h3>
+      <p>Слышишь 10 вопросов (или короткие диалоги с вопросом) — отвечаешь своими словами. Оценивается полнота, связность и уместность ответа.</p>
+      <span class="time">~10 вопросов · по 10 сек подготовки + ~15 сек ответа</span>
+    </div>
+    <div class="card">
+      <div class="num han">回答问题</div>
+      <h3>Часть 3 · Пересказ / высказывание</h3>
+      <p>Слышишь длинный текст (рассказ/диалог), делаешь заметки за 1 минуту, затем пересказываешь содержание по китайски своими словами. Главная часть по весу.</p>
+      <span class="time">1 текст · 1 мин на заметки + 2 мин на пересказ</span>
+    </div>
+  </div>
+  <div class="note">
+    <b>Как оценивается:</b> запись твоей речи оценивают по трём осям — <b>точность произношения и тонов</b>, <b>грамматическая и лексическая точность</b>, <b>беглость и связность</b>. Максимум 100 баллов; 60 — проходной порог. Разница между 53 и 65 — это в первую очередь <b>клише, автоматизмы и уверенная подача в Части 2 и 3</b>, а не новая лексика.
+  </div>
+</section>
+
+<!-- ============ 2. ПЛАН ============ -->
+<section id="plan">
+  <div class="kicker">Блок 1 · План по дням</div>
+  <h2>Трекер на 4 недели</h2>
+  <p class="lead">Каждый день — 45–70 минут практики. Обязательное правило: <b>записывай себя на диктофон каждый день</b> и раз в два дня сверяйся с чек-листом (см. конец страницы).</p>
+
+  <!-- НЕДЕЛЯ 1 -->
+  <div class="week" id="week1">
+    <div class="week-head">
+      <span class="week-badge">Неделя 1</span>
+      <div><h3>Аудирование и тоны</h3><div class="focus">Фокус: точное восприятие → Часть 1 · Shadowing каждый день</div></div>
+    </div>
+    <div class="days">
+      <div class="day"><div class="d">День 1</div><p><b>Диагностика.</b> Сделай 1 полный пробный тест (официальные сэмплы HSKK 中级 с сайта chinesetest.cn). Запиши на диктофон, отметь слабые места: тоны? скорость? непонимание вопроса?</p></div>
+      <div class="day"><div class="d">День 2</div><p><b>Тоны.</b> Разбор четырёх тонов: 10 мин произношения пар (mā/má/mǎ/mà, bā/bá/bǎ/bà…), затем <b>Shadowing 20 мин</b> — повторяй фразы аудио с задержкой 1–2 сек, копируя мелодику.</p></div>
+      <div class="day"><div class="d">День 3</div><p><b>Тоновые пары.</b> Отработай минимальные пары (买/卖 mǎi/mài, 北/杯…). 15 мин. Затем 15 мин Shadowing аудио HSK 4. Запиши 5 мин своего повторения на диктофон и сравни с оригиналом.</p></div>
+      <div class="day"><div class="d">День 4</div><p><b>Часть 1 в лоб.</b> 10 минут: диктофон + 10 фраз для повторения (из сэмплов). Слушай запись, отмечай каждую ошибку в тонах. Повтори круг до 3 идеальных записей.</p></div>
+      <div class="day"><div class="d">День 5</div><p><b>Слух на скорости.</b> Слушай подкасты/аудио на HSK 4–5 уровне (慢速 → нормальная скорость). 20 мин. Потом перескажи вслух 3 услышанных предложения — запись на диктофон.</p></div>
+      <div class="day"><div class="d">День 6</div><p><b>Мини-симуляция Части 1.</b> 2 подхода по 10 фраз подряд без пауз. Слушай обе записи, составь список из 5 самых частых ошибок — это твой чек-лист недели 2.</p></div>
+      <div class="day"><div class="d">День 7</div><p><b>Контрольная недели.</b> Пробный тест, только Части 1–2. Запись → самопроверка по чек-листу. Запиши итог недели: что улучшилось, что осталось. Выходной от новой лексики.</p></div>
+    </div>
+  </div>
+
+  <!-- НЕДЕЛЯ 2 -->
+  <div class="week" id="week2">
+    <div class="week-head">
+      <span class="week-badge">Неделя 2</span>
+      <div><h3>Ответы на вопросы</h3><div class="focus">Фокус: спонтанная речь → Часть 2 · заучивание клише</div></div>
+    </div>
+    <div class="days">
+      <div class="day"><div class="d">День 8</div><p><b>Заучи «скелет» ответа:</b> начало (<span class="han" style="color:var(--cn)">我觉得…</span>) → 1 причина (<span class="han" style="color:var(--cn)">因为…</span>) → пример → концовка (<span class="han" style="color:var(--cn)">所以…</span>). Проговори шаблон 10 раз по-разному. Запись.</p></div>
+      <div class="day"><div class="d">День 9</div><p><b>Тема «Мои хобби».</b> Найди/составь 8 вопросов по теме. На каждый — ответ 3–4 предложения по шаблону, строго на диктофон. Сверь с клише из раздела ниже.</p></div>
+      <div class="day"><div class="d">День 10</div><p><b>Тема «Мой день».</b> Те же 8 вопросов + таймер: подготовка 10 сек, ответ 15 сек. Тренируй начинать ответ <b>сразу</b>, без «эмм» — старт с клише спасает.</p></div>
+      <div class="day"><div class="d">День 11</div><p><b>Тренировка «незнакомого слова».</b> 10 вопросов, в половине — слово, которое ты «не знаешь». Отрабатывай обходные конструкции: <span class="han" style="color:var(--cn)">我不太清楚…，但是… / 我的意思是…</span>. Запись каждого обхода.</p></div>
+      <div class="day"><div class="d">День 12</div><p><b>Тема «Еда» и «Семья».</b> По 6 вопросов на тему, ответы 3–4 предложения. Обязательно используй по 2 разных связки из таблицы connectors.</p></div>
+      <div class="day"><div class="d">День 13</div><p><b>Скоростной блиц.</b> 20 вопросов подряд, на каждый — ровно 15 сек ответа, таймер. Цель: ни одной паузы дольше 1 сек. После — прослушай и посчитай паузы.</p></div>
+      <div class="day"><div class="d">День 14</div><p><b>Контрольная недели.</b> Пробный тест, Части 1–2 полностью. Запись → самопроверка. Сравни с Днём 1: длина ответов должна вырасти с 1–2 предложений до 3–4.</p></div>
+    </div>
+  </div>
+
+  <!-- НЕДЕЛЯ 3 -->
+  <div class="week" id="week3">
+    <div class="week-head">
+      <span class="week-badge">Неделя 3</span>
+      <div><h3>Пересказ</h3><div class="focus">Фокус: заметки за 1 минуту → монолог Части 3</div></div>
+    </div>
+    <div class="days">
+      <div class="day"><div class="d">День 15</div><p><b>Техника заметок.</b> Послушай рассказ HSK 4. Во время прослушивания записывай <b>только</b>: кто, где, что случилось, результат. Никаких полных предложений. Сверь: что упустила?</p></div>
+      <div class="day"><div class="d">День 16</div><p><b>Ключевые слова.</b> Система сокращений: 人 = люди/персонаж, ↑ = растёт/улучшилось, 因 = причина, 果 = результат, 例 = пример. Найди 5 рассказов, сделай заметки ими.</p></div>
+      <div class="day"><div class="d">День 17</div><p><b>Первый пересказ.</b> 1 текст: слушаешь → 1 мин заметок → 2 мин пересказа на диктофон по шаблону (<span class="han" style="color:var(--cn)">这个故事讲的是… 首先… 后来… 最后…</span>).</p></div>
+      <div class="day"><div class="d">День 18</div><p><b>Структура события.</b> Ещё 2 текста. Перед пересказом проговори про себя план: начало → проблема/событие → решение → вывод. Каждый пересказ — запись.</p></div>
+      <div class="day"><div class="d">День 19</div><p><b>На время.</b> Таймер 2 минуты. Перескази текст ровно на 1:45–2:00 — не короче! Если не хватает содержания, добавь вывод (<span class="han" style="color:var(--cn)">这个故事告诉我…</span>).</p></div>
+      <div class="day"><div class="d">День 20</div><p><b>Тексты посложнее.</b> 2 текста уровня HSK 5. Если 30% не поняла — не паникуй: пересказывай то, что поняла, связывая связками <span class="han" style="color:var(--cn)">虽然…但是… / 不但…而且…</span>.</p></div>
+      <div class="day"><div class="d">День 21</div><p><b>Контрольная недели.</b> Полный формат Части 3: слушаешь, заметки, пересказ с записью. Прослушай и проверь: есть ли начало, середина, конец? Хватило ли времени? Вывод недели.</p></div>
+    </div>
+  </div>
+
+  <!-- НЕДЕЛЯ 4 -->
+  <div class="week" id="week4">
+    <div class="week-head">
+      <span class="week-badge">Неделя 4</span>
+      <div><h3>Пробные тесты</h3><div class="focus">Фокус: экзаменационный режим → полная симуляция</div></div>
+    </div>
+    <div class="days">
+      <div class="day"><div class="d">День 22</div><p><b>Полный пробник №1.</b> Таймер, наушники, одна попытка — как на экзамене. Всё на диктофон. Вечером — разбор: сколько баллов дал бы себе за каждую часть?</p></div>
+      <div class="day"><div class="d">День 23</div><p><b>Работа над ошибками.</b> Повтори 5 худших моментов вчерашней записи по 3 раза. Отдельно — 10 мин Shadowing, чтобы «сбросить» неуверенность в тонах.</p></div>
+      <div class="day"><div class="d">День 24</div><p><b>Повторение клише.</b> Прочитай вслух всю базу клише (раздел ниже) — Часть 2 и шаблоны Части 3. Запиши 3 любых ответа заново, на таймере.</p></div>
+      <div class="day"><div class="d">День 25</div><p><b>Полный пробник №2.</b> Строго по времени. Цель — стабильность: каждая часть не хуже, чем в пробнике №1. Запись обязательна.</p></div>
+      <div class="day"><div class="d">День 26</div><p><b>Разбор + слабое звено.</b> Найди часть с наименьшим результатом и дай ей 30 мин фокуса: тоны — минимальные пары, ответы — блиц 20 вопросов, пересказ — заметки + 1 текст.</p></div>
+      <div class="day"><div class="d">День 27</div><p><b>Полный пробник №3.</b> Финальная симуляция при дневном свете в то же время суток, что и экзамен. Настрой микрофон, проверь запись.</p></div>
+      <div class="day"><div class="d">День 28</div><p><b>Лёгкая речёвка.</b> Только клише и тёплый-up: 15 мин чтения вслух своих лучших ответов недели. Ничего нового — только уверенность.</p></div>
+      <div class="day"><div class="d">День 29</div><p><b>Микро-симуляция.</b> Сокращённый пробник: 5 фраз на повторение + 5 вопросов + 1 пересказ. Запись, самопроверка, спать спокойно.</p></div>
+      <div class="day"><div class="d">День 30</div><p><b>Экзамен.</b> За 2 часа до: 10 мин проговори клише начала ответов. Правила дня: говори сразу и до конца таймера, не останавливайся на ошибке, используй связки. <b>Удачи! 加油！</b></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. КЛИШЕ ============ -->
+<section id="phrases">
+  <div class="kicker">Блок 2 · Ядро подготовки</div>
+  <h2>База речевых клише и шаблонов</h2>
+  <p class="lead">Это твоё главное оружие: выучи до автоматизма — и на экзамене ты никогда не замолчишь. Читай вслух каждый день.</p>
+
+  <div class="theme-title"><span class="dot"></span>Часть 2 · Начало ответа</div>
+  <div class="grid g3">
+    <div class="phrase"><div class="cn han">我觉得……</div><div class="py">wǒ juéde…</div><div class="ru">«Я считаю / мне кажется, что…» — универсальный старт мнения</div></div>
+    <div class="phrase"><div class="cn han">对我来说，……很重要。</div><div class="py">duì wǒ lái shuō, … hěn zhòngyào</div><div class="ru">«Для меня … очень важно» — старт для тем «день», «семья», «учёба»</div></div>
+    <div class="phrase"><div class="cn han">在我的空闲时间，我喜欢……</div><div class="py">zài wǒ de kòngxián shíjiān, wǒ xǐhuan…</div><div class="ru">«В свободное время я люблю…» — старт для темы «хобби»</div></div>
+    <div class="phrase"><div class="cn han">一般来说，……</div><div class="py">yìbān lái shuō…</div><div class="ru">«Как правило,…» — плавный старт, выигрывает время</div></div>
+    <div class="phrase"><div class="cn han">这个问题很有意思。</div><div class="py">zhège wèntí hěn yǒu yìsi</div><div class="ru">«Это интересный вопрос» — +2 секунды на сбор мыслей</div></div>
+    <div class="phrase"><div class="cn han">我觉得这要看情况。</div><div class="py">wǒ juéde zhè yào kàn qíngkuàng</div><div class="ru">«Тут всё зависит от ситуации» — мостик к ответу «с одной стороны…»</div></div>
+  </div>
+
+  <div class="theme-title"><span class="dot"></span>Часть 2 · Если не знаешь слово (спасательные фразы)</div>
+  <div class="grid g3">
+    <div class="phrase"><div class="cn han">不好意思，我不太清楚这个词的意思。</div><div class="py">bù hǎoyìsi, wǒ bú tài qīngchu zhège cí de yìsi</div><div class="ru">«Простите, я не совсем понимаю значение этого слова» — честно и нормально</div></div>
+    <div class="phrase"><div class="cn han">我的意思是……</div><div class="py">wǒ de yìsi shì…</div><div class="ru">«Я имею в виду…» — переформулируй проще, не останавливаясь</div></div>
+    <div class="phrase"><div class="cn han">就是说……</div><div class="py">jiùshì shuō…</div><div class="ru">«То есть…» — объясни слово своими словами вместо паузы</div></div>
+    <div class="phrase"><div class="cn han">比如……</div><div class="py">bǐrú…</div><div class="ru">«Например,…» — переключись на пример, если слово потерялось</div></div>
+    <div class="phrase"><div class="cn han">虽然我说得不太好，但是……</div><div class="py">suīrán wǒ shuō de bú tài hǎo, dànshì…</div><div class="ru">«Хотя я говорю не очень хорошо, но…» — и дальше по делу, без паузы</div></div>
+    <div class="phrase"><div class="cn han">可以说……</div><div class="py">kěyǐ shuō…</div><div class="ru">«Можно сказать…» — мягкий перезапуск фразы</div></div>
+  </div>
+
+  <div class="theme-title"><span class="dot"></span>Часть 2 · Концовка ответа</div>
+  <div class="grid g3">
+    <div class="phrase"><div class="cn han">所以，我觉得……</div><div class="py">suǒyǐ, wǒ juéde…</div><div class="ru">«Поэтому я считаю…» — классическое завершение мысли</div></div>
+    <div class="phrase"><div class="cn han">这就是我的想法。</div><div class="py">zhè jiùshì wǒ de xiǎngfǎ</div><div class="ru">«Вот так я к этому отношусь» — сильное завершение ответа</div></div>
+    <div class="phrase"><div class="cn han">总的来说，……</div><div class="py">zǒng de lái shuō…</div><div class="ru">«В целом…» — итоговая связка в конце ответа</div></div>
+    <div class="phrase"><div class="cn han">我希望以后能……</div><div class="py">wǒ xīwàng yǐhòu néng…</div><div class="ru">«Надеюсь в будущем смогу…» — красивый финал тем про планы</div></div>
+    <div class="phrase"><div class="cn han">对我来说，这是一个很好的经验。</div><div class="py">duì wǒ lái shuō, zhè shì yí ge hěn hǎo de jīngyàn</div><div class="ru">«Для меня это хороший опыт» — финал тем про путешествия/события</div></div>
+    <div class="phrase"><div class="cn han">我觉得这是一件很有意义的事情。</div><div class="py">wǒ juéde zhè shì yí jiàn hěn yǒu yìyì de shìqing</div><div class="ru">«Это очень значимое дело» — универсальный эмоциональный финал</div></div>
+  </div>
+
+  <div class="theme-title"><span class="dot"></span>Часть 3 · Шаблон пересказа</div>
+  <div class="tpl">
+    <h4>Начало истории</h4>
+    <ul>
+      <li><span class="cn2">这个故事讲的是……</span><span class="meta"><i>zhège gùshi jiǎng de shì…</i> — «Эта история рассказывает о том, что…»</span></li>
+      <li><span class="cn2">这个故事是关于……的。</span><span class="meta"><i>zhège gùshi shì guānyú… de</i> — «Эта история о…»</span></li>
+      <li><span class="cn2">故事里有两个人，一个人……，另一个人……</span><span class="meta"><i>gùshi li yǒu liǎng ge rén…</i> — «В истории два человека: один…, другой…» — представление персонажей</span></li>
+    </ul>
+  </div>
+  <div class="tpl">
+    <h4>Связка частей</h4>
+    <ul>
+      <li><span class="cn2">首先，…… / 一开始，……</span><span class="meta"><i>shǒuxiān / yì kāishǐ</i> — «Сначала… / В начале…»</span></li>
+      <li><span class="cn2">然后 / 后来，……</span><span class="meta"><i>ránhòu / hòulái</i> — «Потом / Затем…»</span></li>
+      <li><span class="cn2">接着，……</span><span class="meta"><i>jiēzhe</i> — «Далее…» — следующий шаг события</span></li>
+      <li><span class="cn2">没想到，……</span><span class="meta"><i>méi xiǎngdào</i> — «Неожиданно…» — поворот сюжета</span></li>
+      <li><span class="cn2">最后 / 终于，……</span><span class="meta"><i>zuìhòu / zhōngyú</i> — «В конце концов / Наконец…»</span></li>
+    </ul>
+  </div>
+  <div class="tpl">
+    <h4>Вывод</h4>
+    <ul>
+      <li><span class="cn2">从这个故事我们可以看出，……</span><span class="meta"><i>cóng zhège gùshi wǒmen kěyǐ kànchū</i> — «Из этой истории мы видим, что…»</span></li>
+      <li><span class="cn2">这个故事告诉我，……</span><span class="meta"><i>zhège gùshi gàosu wǒ</i> — «Эта история учит меня тому, что…»</span></li>
+      <li><span class="cn2">所以，我们应该……</span><span class="meta"><i>suǒyǐ, wǒmen yīnggāi</i> — «Поэтому мы должны…» — завершение пересказа выводом</span></li>
+    </ul>
+  </div>
+
+  <div class="theme-title"><span class="dot"></span>Слова-связки (Connectors)</div>
+  <table>
+    <tr><th>Связка</th><th>Пиньинь</th><th>Значение и пример использования</th></tr>
+    <tr><td><span class="han">因为……所以……</span></td><td><i>yīnwèi… suǒyǐ…</i></td><td>«потому что… поэтому…» — <span class="han">因为我很喜欢中国文化，所以我学习汉语。</span></td></tr>
+    <tr><td><span class="han">虽然……但是……</span></td><td><i>suīrán… dànshì…</i></td><td>«хотя… но…» — <span class="han">虽然汉语很难，但是很有意思。</span></td></tr>
+    <tr><td><span class="han">不但……而且……</span></td><td><i>búdàn… érqiě…</i></td><td>«не только… но и…» — <span class="han">他不但聪明，而且很努力。</span></td></tr>
+    <tr><td><span class="han">如果……就……</span></td><td><i>rúguǒ… jiù…</i></td><td>«если… то…» — <span class="han">如果有时间，我就去旅行。</span></td></tr>
+    <tr><td><span class="han">一边……一边……</span></td><td><i>yìbiān… yìbiān…</i></td><td>«одновременно… и…» — <span class="han">我一边吃饭一边看电视。</span></td></tr>
+    <tr><td><span class="han">先……然后……</span></td><td><i>xiān… ránhòu…</i></td><td>«сначала… потом…» — последовательность действий</td></tr>
+    <tr><td><span class="han">除了……以外，还……</span></td><td><i>chúle… yǐwài, hái…</i></td><td>«кроме… ещё…» — <span class="han">除了中文，我还学英语。</span></td></tr>
+    <tr><td><span class="han">越来越……</span></td><td><i>yuè lái yuè…</i></td><td>«всё больше и больше…» — <span class="han">我的汉语越来越好。</span></td></tr>
+    <tr><td><span class="han">对……来说</span></td><td><i>duì… lái shuō</i></td><td>«для… (с точки зрения)» — <span class="han">对我来说，家最重要。</span></td></tr>
+    <tr><td><span class="han">只要……就……</span></td><td><i>zhǐyào… jiù…</i></td><td>«лишь бы… и…» — <span class="han">只要努力，就会有进步。</span></td></tr>
+    <tr><td><span class="han">其实……</span></td><td><i>qíshí</i></td><td>«на самом деле…» — мягкий поворот мысли</td></tr>
+    <tr><td><span class="han">总之……</span></td><td><i>zǒngzhī</i></td><td>«в общем,…» — финальная связка для вывода</td></tr>
+    <tr><td><span class="han">另外……</span></td><td><i>lìngwài</i></td><td>«кроме того…» — добавление второй мысли</td></tr>
+    <tr><td><span class="han">不过……</span></td><td><i>búguò</i></td><td>«однако…» — лёгкое противопоставление в разговорной речи</td></tr>
+  </table>
+</section>
+
+<!-- ============ 4. ЧЕК-ЛИСТ ============ -->
+<section id="check">
+  <div class="kicker">Блок 3 · Самоконтроль</div>
+  <h2>Чек-лист самопроверки записей</h2>
+  <p class="lead">Прослушивай свою запись с этим списком рядом. Отмечай галочками — кликабельно. Цель: к концу недели 3 — минимум 8 из 10 пунктов на каждой записи.</p>
+  <div class="check-list">
+    <div class="chk"><div class="box">✓</div><p><b>Тоны:</b> в каждом слове чётко слышны все 4 тона, особенно 3-й тон (не проваливается в бормотание) и различие 2/4 тонов.<small>Слушай слова 买/卖, 北/杯, 是/十 — если они звучат одинаково, вернись к минимальным парам.</small></p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Ударение и интонация:</b> предложение звучит как мелодия китайской речи, а не как цепочка отдельно произнесённых слогов.</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Начало ответа:</b> первая фраза произнесена сразу после сигнала — без «эмм», без 2+ секунд тишины.</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Полнота:</b> ответ в Части 2 — минимум 3 полных предложения: позиция → причина → пример/итог.</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Связки:</b> в каждом ответе есть хотя бы одна связка из таблицы (因为…所以 / 虽然…但是 / 不但…而且 и т.д.).</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Паузы:</b> нет пауз длиннее 1 секунды; между предложениями — короткая, ритмичная пауза, а не затравленная тишина.</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Структура пересказа (Часть 3):</b> есть чёткое начало (这个故事讲的是…), середина (首先…后来…最后…) и вывод (从这个故事…).</small></p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Хронометраж:</b> пересказ длится 1:30–2:00 минуты; ответы Части 2 — не короче 12 секунд каждый.</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Исправление ошибок:</b> если ошибся — не остановился, не начал сначала, а продолжил фразу (спасательные фразы работают).</p></div>
+    <div class="chk"><div class="box">✓</div><p><b>Беглость:</b> темп ровный, слова не «спотыкаются» друг о друга; темп чуть медленнее разговорного — и это нормально и безопасно.</p></div>
+  </div>
+</section>
+
+<footer>
+  <span class="han">加油！</span>
+  30 дней дисциплины = +12 баллов. Говори каждый день, записывай, проверяй. Удачи на экзамене!
+</footer>
+
+<script>
+  document.querySelectorAll('.chk').forEach(function(el){
+    el.addEventListener('click', function(){ el.classList.toggle('done'); });
+  });
+</script>
+</body>
+</html>
